@@ -40,6 +40,23 @@ export class AlbumsController {
     }
   }
 
+  static async destroyByAlbumId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const albumId: number = parseInt(req.params.albumId);
+      const result = await AlbumsService.destoryByAlbumId(albumId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async updateByAlbumId(
     req: Request,
     res: Response,
