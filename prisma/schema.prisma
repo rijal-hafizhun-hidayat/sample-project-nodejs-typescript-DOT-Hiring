@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(255)
+  username String @unique
+
+  user_album album[] @relation("user_album")
+  user_post  post[]  @relation("user_post")
+  user_todo  todo[]  @relation("user_todo")
+}
+
+model post {
+  userId Int
+  id     Int    @id @default(autoincrement())
+  title  String @db.VarChar(255)
+  body   String @db.Text
+
+  user users @relation("user_post", fields: [userId], references: [id])
+
+  comments comment[]
+
+  @@map("posts")
+}
+
+model comment {
+  postId Int
+  id     Int    @id @default(autoincrement())
+  name   String @db.VarChar(255)
+  email  String @db.VarChar(255)
+  body   String @db.Text
+
+  post post @relation(fields: [postId], references: [id])
+
+  @@map("comments")
+}
+
+model album {
+  userId Int
+  id     Int    @id @default(autoincrement())
+  title  String @db.VarChar(255)
+
+  user users @relation("user_album", fields: [userId], references: [id])
+
+  photo photo[]
+
+  @@map("albums")
+}
+
+model photo {
+  albumId      Int
+  id           Int    @id @default(autoincrement())
+  title        String @db.VarChar(255)
+  url          String @db.VarChar(255)
+  thumbnailUrl String @db.VarChar(255)
+
+  album album @relation(fields: [albumId], references: [id])
+
+  @@map("photos")
+}
+
+model todo {
+  userId    Int
+  id        Int     @id @default(autoincrement())
+  title     String  @db.VarChar(255)
+  completed Boolean @db.Boolean
+
+  user users @relation("user_todo", fields: [userId], references: [id])
+
+  @@map("todos")
+}
