@@ -43,6 +43,28 @@ export class AlbumsService {
     return toAlbumsResponse(album);
   }
 
+  static async destoryByAlbumId(albumId: number): Promise<AlbumsResponse> {
+    const isAlbumExists = await prisma.album.findUnique({
+      where: {
+        id: albumId,
+      },
+    });
+
+    if (!isAlbumExists) {
+      throw new ErrorResponse(404, "album not found");
+    }
+
+    const [album] = await prisma.$transaction([
+        prisma.album.delete({
+          where: {
+            id: albumId,
+          },
+        }),
+      ]);
+  
+      return toAlbumsResponse(album);
+  }
+
   static async findByAlbumId(albumId: number): Promise<AlbumsResponse> {
     const album = await prisma.album.findUnique({
       where: {
