@@ -16,7 +16,10 @@ datasource db {
 model users {
   id       Int    @id @default(autoincrement())
   name     String @db.VarChar(255)
-  username String @unique
+  username String @db.VarChar(255)
+  email    String @unique
+  phone    String @unique
+  website  String @db.VarChar(255)
 
   user_album album[] @relation("user_album")
   user_post  post[]  @relation("user_post")
@@ -43,7 +46,7 @@ model comment {
   email  String @db.VarChar(255)
   body   String @db.Text
 
-  post post @relation(fields: [postId], references: [id])
+  post post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("comments")
 }
