@@ -3,6 +3,7 @@ import { UsersController } from "../controller/users-controller";
 import { PostsController } from "../controller/posts-controller";
 import { CommentsController } from "../controller/comments-controller";
 import { AlbumsController } from "../controller/albums-controller";
+import { TodosController } from "../controller/todos-controller";
 
 const apiRoute = express.Router();
 
@@ -33,5 +34,12 @@ apiRoute.get("/api/albums", AlbumsController.getAll);
 apiRoute.post("/api/albums", AlbumsController.store);
 apiRoute.get("/api/albums/:albumId", AlbumsController.findByAlbumId);
 apiRoute.put("/api/albums/:albumId", AlbumsController.updateByAlbumId);
+apiRoute.delete("/api/albums/:albumId", AlbumsController.destroyByAlbumId);
+
+apiRoute.get("/api/todos", TodosController.getAll);
+apiRoute.post("/api/todos", TodosController.store);
+apiRoute.get("/api/todos/:todoId", TodosController.findByTodoId);
+apiRoute.put("/api/todos/:todoId", TodosController.updateByTodoId);
+apiRoute.delete("/api/todos/:todoId", TodosController.destroyByTodoId);
 
 export { apiRoute };
