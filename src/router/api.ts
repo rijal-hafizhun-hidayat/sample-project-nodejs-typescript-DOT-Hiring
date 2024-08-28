@@ -4,6 +4,7 @@ import { PostsController } from "../controller/posts-controller";
 import { CommentsController } from "../controller/comments-controller";
 import { AlbumsController } from "../controller/albums-controller";
 import { TodosController } from "../controller/todos-controller";
+import { PhotosController } from "../controller/photos-controller";
 
 const apiRoute = express.Router();
 
@@ -41,5 +42,10 @@ apiRoute.post("/api/todos", TodosController.store);
 apiRoute.get("/api/todos/:todoId", TodosController.findByTodoId);
 apiRoute.put("/api/todos/:todoId", TodosController.updateByTodoId);
 apiRoute.delete("/api/todos/:todoId", TodosController.destroyByTodoId);
+
+apiRoute.get("/api/photos", PhotosController.getAllByAlbumId);
+apiRoute.post("/api/photos", PhotosController.store);
+apiRoute.get("/api/photos/:photoId", PhotosController.findByPhotoId);
+apiRoute.put("/api/photos/:photoId", PhotosController.updateByPhotoId);
 
 export { apiRoute };
