@@ -2,6 +2,7 @@ import express from "express";
 import { UsersController } from "../controller/users-controller";
 import { PostsController } from "../controller/posts-controller";
 import { CommentsController } from "../controller/comments-controller";
+import { AlbumsController } from "../controller/albums-controller";
 
 const apiRoute = express.Router();
 
@@ -27,5 +28,10 @@ apiRoute.delete(
   "/api/comments/:commentId",
   CommentsController.destroyByCommentId
 );
+
+apiRoute.get("/api/albums", AlbumsController.getAll);
+apiRoute.post("/api/albums", AlbumsController.store);
+apiRoute.get("/api/albums/:albumId", AlbumsController.findByAlbumId);
+apiRoute.put("/api/albums/:albumId", AlbumsController.updateByAlbumId);
 
 export { apiRoute };
