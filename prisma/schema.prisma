@@ -56,7 +56,7 @@ model album {
   id     Int    @id @default(autoincrement())
   title  String @db.VarChar(255)
 
-  user users @relation("user_album", fields: [userId], references: [id])
+  user users @relation("user_album", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   photo photo[]
 
