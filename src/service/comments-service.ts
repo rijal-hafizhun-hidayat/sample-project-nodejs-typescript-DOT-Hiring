@@ -64,7 +64,7 @@ export class CommentsService {
   static async updateByCommentId(
     commentId: number,
     request: CommentsRequest
-  ): Promise<CommentsRequest> {
+  ): Promise<CommentResponse> {
     const requestBody: CommentsRequest = Validation.validate(
       CommentsValidation.CommentsRequest,
       request
@@ -119,32 +119,20 @@ export class CommentsService {
     return toCommentResponse(comment);
   }
 
-  static async changePostIdByCommentId(
+  static async patchByCommentId(
     commentId: number,
     request: CommentsRequest
   ): Promise<CommentResponse> {
-    const requestBody: CommentsRequest = Validation.validate(
-      CommentsValidation.CommentChangePostIdRequest,
-      request
-    );
-
-    const isPostExists = await prisma.post.findUnique({
-      where: {
-        id: requestBody.postId,
-      },
-    });
-
-    if (!isPostExists) {
-      throw new ErrorResponse(404, "post not found");
-    }
-
     const [comment] = await prisma.$transaction([
       prisma.comment.update({
         where: {
           id: commentId,
         },
         data: {
-          postId: requestBody.postId,
+          postId: request.postId,
+          name: request.name,
+          email: request.email,
+          body: request.body,
         },
       }),
     ]);
@@ -167,9 +155,7 @@ export class CommentsService {
     return comments.data;
   }
 
-  static async storeFromApi(
-    request: CommentsRequest
-  ): Promise<CommentResponse> {
+  static async storeFromApi(request: CommentsRequest): Promise<AxiosResponse> {
     const requestBody: CommentsRequest = Validation.validate(
       CommentsValidation.CommentsRequest,
       request
@@ -185,23 +171,23 @@ export class CommentsService {
       }
     );
 
-    return toCommentResponse(comments.data);
+    return comments.data;
   }
 
   static async findByCommentIdFromApi(
     commentId: number
-  ): Promise<CommentResponse> {
+  ): Promise<AxiosResponse> {
     const comment: AxiosResponse = await axios.get(
       `https://jsonplaceholder.typicode.com/comments/${commentId}`
     );
 
-    return toCommentResponse(comment.data);
+    return comment.data;
   }
 
   static async updateByCommentIdFromApi(
     commentId: number,
     request: CommentsRequest
-  ): Promise<CommentResponse> {
+  ): Promise<AxiosResponse> {
     const requestBody: CommentsRequest = Validation.validate(
       CommentsValidation.CommentsRequest,
       request
@@ -217,7 +203,7 @@ export class CommentsService {
       }
     );
 
-    return toCommentResponse(comment.data);
+    return comment.data;
   }
 
   static async destroyByCommentIdFromApi(
@@ -225,6 +211,23 @@ export class CommentsService {
   ): Promise<AxiosResponse> {
     const comment: AxiosResponse = await axios.delete(
       `https://jsonplaceholder.typicode.com/comments/${commentId}`
+    );
+
+    return comment.data;
+  }
+
+  static async patchByCommentIdFromApi(
+    commentId: number,
+    request: CommentsRequest
+  ): Promise<AxiosResponse> {
+    const comment: AxiosResponse = await axios.patch(
+      `https://jsonplaceholder.typicode.com/comments/${commentId}`,
+      {
+        postId: request.postId,
+        name: request.name,
+        email: request.email,
+        body: request.body,
+      }
     );
 
     return comment.data;
