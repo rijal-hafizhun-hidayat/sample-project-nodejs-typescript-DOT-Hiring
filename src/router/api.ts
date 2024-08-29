@@ -77,5 +77,16 @@ apiRoute.delete(
   CommentsController.destroyByCommentIdFromApi
 );
 
+apiRoute.get("/api/albums-api", AlbumsController.getAllFromApi);
+apiRoute.post("/api/albums-api", AlbumsController.storeFromApi);
+apiRoute.get("/api/albums-api/:albumId", AlbumsController.findByAlbumIdFromApi);
+apiRoute.put(
+  "/api/albums-api/:albumId",
+  AlbumsController.updateByAlbumIdFromApi
+);
+apiRoute.delete(
+  "/api/albums-api/:albumId",
+  AlbumsController.destroyByAlbumIdFromApi
+);
 //END API
 export { apiRoute };
