@@ -8,6 +8,8 @@ import { PhotosController } from "../controller/photos-controller";
 
 const apiRoute = express.Router();
 
+//START ORM
+
 apiRoute.get("/api/users", UsersController.getAll);
 apiRoute.post("/api/users-api", UsersController.storeFromApi);
 
@@ -48,4 +50,16 @@ apiRoute.post("/api/photos", PhotosController.store);
 apiRoute.get("/api/photos/:photoId", PhotosController.findByPhotoId);
 apiRoute.put("/api/photos/:photoId", PhotosController.updateByPhotoId);
 
+//END ORM
+
+//START API
+
+apiRoute.get("/api/posts-api", PostsController.getAllFromApi);
+apiRoute.get("/api/posts-api/:postId", PostsController.findByPostIdFromApi);
+apiRoute.put("/api/posts-api/:postId", PostsController.updateByPostIdFromApi);
+apiRoute.delete(
+  "/api/posts-api/:postId",
+  PostsController.destroyByPostIdFromApi
+);
+//END API
 export { apiRoute };
