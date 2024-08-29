@@ -105,6 +105,27 @@ export class PhotosService {
     return toPhotosResponse(photo);
   }
 
+  static async patchByPhotoId(
+    photoId: number,
+    request: PhotosRequest
+  ): Promise<PhotosResponse> {
+    const [photo] = await prisma.$transaction([
+      prisma.photo.update({
+        where: {
+          id: photoId,
+        },
+        data: {
+          albumId: request.albumId,
+          title: request.title,
+          url: request.url,
+          thumbnailUrl: request.thumbnailUrl,
+        },
+      }),
+    ]);
+
+    return toPhotosResponse(photo);
+  }
+
   static async destroyByPhotoId(photoId: number): Promise<PhotosResponse> {
     const isPhotoExists = await prisma.photo.findUnique({
       where: {
@@ -143,7 +164,7 @@ export class PhotosService {
     return photos.data;
   }
 
-  static async storeFromApi(request: PhotosRequest): Promise<PhotosResponse> {
+  static async storeFromApi(request: PhotosRequest): Promise<AxiosResponse> {
     const requestBody: PhotosRequest = Validation.validate(
       PhotosValidation.PhotosRequest,
       request
@@ -159,21 +180,21 @@ export class PhotosService {
       }
     );
 
-    return toPhotosResponse(photo.data);
+    return photo.data;
   }
 
-  static async findByPhotoIdFromApi(photoId: number): Promise<PhotosResponse> {
+  static async findByPhotoIdFromApi(photoId: number): Promise<AxiosResponse> {
     const photos: AxiosResponse = await axios.get(
       `https://jsonplaceholder.typicode.com/photos/${photoId}`
     );
 
-    return toPhotosResponse(photos.data);
+    return photos.data;
   }
 
   static async updateByPhotoIdFromApi(
     photoId: number,
     request: PhotosRequest
-  ): Promise<PhotosResponse> {
+  ): Promise<AxiosResponse> {
     const requestBody: PhotosRequest = Validation.validate(
       PhotosValidation.PhotosRequest,
       request
@@ -189,7 +210,7 @@ export class PhotosService {
       }
     );
 
-    return toPhotosResponse(photo.data);
+    return photo.data;
   }
 
   static async destroyByPhotoIdFromApi(
@@ -197,6 +218,23 @@ export class PhotosService {
   ): Promise<AxiosResponse> {
     const photo: AxiosResponse = await axios.delete(
       `https://jsonplaceholder.typicode.com/photos/${photoId}`
+    );
+
+    return photo.data;
+  }
+
+  static async patchByPhotoIdFromApi(
+    photoId: number,
+    request: PhotosRequest
+  ): Promise<AxiosResponse> {
+    const photo: AxiosResponse = await axios.patch(
+      `https://jsonplaceholder.typicode.com/photos/${photoId}`,
+      {
+        albumId: request.albumId,
+        title: request.title,
+        url: request.url,
+        thumbnailUrl: request.thumbnailUrl,
+      }
     );
 
     return photo.data;

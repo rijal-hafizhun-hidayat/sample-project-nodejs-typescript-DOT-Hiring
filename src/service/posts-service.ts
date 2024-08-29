@@ -119,31 +119,19 @@ export class PostsService {
     return toPostResponse(post);
   }
 
-  static async changeUserIdByPostId(
+  static async patchByPostId(
     postId: number,
     request: PostRequest
   ): Promise<PostResponse> {
-    const requestBody: PostRequest = Validation.validate(
-      PostsValidation.PostChangeUserIdValidation,
-      request
-    );
-    const isPostExist = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-    });
-
-    if (!isPostExist) {
-      throw new ErrorResponse(404, "post not found");
-    }
-
     const [post] = await prisma.$transaction([
       prisma.post.update({
         where: {
           id: postId,
         },
         data: {
-          userId: requestBody.userId,
+          userId: request.userId,
+          title: request.title,
+          body: request.body,
         },
       }),
     ]);
@@ -151,7 +139,7 @@ export class PostsService {
     return toPostResponse(post);
   }
 
-  static async getAllFromApi(query: PostQuery): Promise<any> {
+  static async getAllFromApi(query: PostQuery): Promise<AxiosResponse> {
     const queryParams: any = {};
 
     if (query.userId) {
@@ -167,18 +155,18 @@ export class PostsService {
     return posts.data;
   }
 
-  static async findByPostIdFromApi(postId: number): Promise<PostResponse> {
+  static async findByPostIdFromApi(postId: number): Promise<AxiosResponse> {
     const posts = await axios.get(
       `https://jsonplaceholder.typicode.com/posts/${postId}`
     );
 
-    return toPostResponse(posts.data);
+    return posts.data;
   }
 
   static async updateByPostIdFromApi(
     postId: number,
     request: PostRequest
-  ): Promise<PostResponse> {
+  ): Promise<AxiosResponse> {
     const requestBody: PostRequest = Validation.validate(
       PostsValidation.PostsRequest,
       request
@@ -193,14 +181,30 @@ export class PostsService {
       }
     );
 
-    return toPostResponse(post.data);
+    return post.data;
   }
 
-  static async destroyByPostIdFromApi(postId: number): Promise<PostResponse> {
+  static async destroyByPostIdFromApi(postId: number): Promise<AxiosResponse> {
     const post: AxiosResponse = await axios.delete(
       `https://jsonplaceholder.typicode.com/posts/${postId}`
     );
 
-    return toPostResponse(post.data);
+    return post.data;
+  }
+
+  static async patchByPostIdFromApi(
+    postId: number,
+    request: PostRequest
+  ): Promise<AxiosResponse> {
+    const post: AxiosResponse = await axios.patch(
+      `https://jsonplaceholder.typicode.com/posts/${postId}`,
+      {
+        userId: request.userId,
+        title: request.title,
+        body: request.body,
+      }
+    );
+
+    return post.data;
   }
 }

@@ -17,17 +17,14 @@ apiRoute.get("/api/posts", PostsController.getAll);
 apiRoute.post("/api/posts", PostsController.store);
 apiRoute.get("/api/posts/:postId", PostsController.findByPostId);
 apiRoute.put("/api/posts/:postId", PostsController.updateByPostId);
-apiRoute.patch("/api/posts/:postId", PostsController.changeUserIdByPostId);
+apiRoute.patch("/api/posts/:postId", PostsController.patchByPostId);
 apiRoute.delete("/api/posts/:postId", PostsController.destroyByPostId);
 
 apiRoute.get("/api/comments", CommentsController.getAll);
 apiRoute.post("/api/comments", CommentsController.store);
 apiRoute.get("/api/comments/:commentId", CommentsController.findByCommentId);
 apiRoute.put("/api/comments/:commentId", CommentsController.updateByCommentId);
-apiRoute.patch(
-  "/api/comments/:commentId",
-  CommentsController.changePostIdNyCommentId
-);
+apiRoute.patch("/api/comments/:commentId", CommentsController.patchByCommentId);
 apiRoute.delete(
   "/api/comments/:commentId",
   CommentsController.destroyByCommentId
@@ -38,17 +35,20 @@ apiRoute.post("/api/albums", AlbumsController.store);
 apiRoute.get("/api/albums/:albumId", AlbumsController.findByAlbumId);
 apiRoute.put("/api/albums/:albumId", AlbumsController.updateByAlbumId);
 apiRoute.delete("/api/albums/:albumId", AlbumsController.destroyByAlbumId);
+apiRoute.patch("/api/albums/:albumId", AlbumsController.patchByAlbumId);
 
 apiRoute.get("/api/todos", TodosController.getAll);
 apiRoute.post("/api/todos", TodosController.store);
 apiRoute.get("/api/todos/:todoId", TodosController.findByTodoId);
 apiRoute.put("/api/todos/:todoId", TodosController.updateByTodoId);
 apiRoute.delete("/api/todos/:todoId", TodosController.destroyByTodoId);
+apiRoute.patch("/api/todos/:todoId", TodosController.patchByTodoId);
 
 apiRoute.get("/api/photos", PhotosController.getAllByAlbumId);
 apiRoute.post("/api/photos", PhotosController.store);
 apiRoute.get("/api/photos/:photoId", PhotosController.findByPhotoId);
 apiRoute.put("/api/photos/:photoId", PhotosController.updateByPhotoId);
+apiRoute.patch("/api/photos/:photoId", PhotosController.patchByPhotoId);
 
 //END ORM
 
@@ -61,6 +61,7 @@ apiRoute.delete(
   "/api/posts-api/:postId",
   PostsController.destroyByPostIdFromApi
 );
+apiRoute.patch("/api/posts-api/:postId", PostsController.patchByPostIdFromApi);
 
 apiRoute.get("/api/comments-api", CommentsController.getAllFromApi);
 apiRoute.post("/api/comments-api", CommentsController.storeFromApi);
@@ -76,6 +77,10 @@ apiRoute.delete(
   "/api/comments-api/:commentId",
   CommentsController.destroyByCommentIdFromApi
 );
+apiRoute.patch(
+  "/api/comments-api/:commentId",
+  CommentsController.patchByCommentIdFromApi
+);
 
 apiRoute.get("/api/albums-api", AlbumsController.getAllFromApi);
 apiRoute.post("/api/albums-api", AlbumsController.storeFromApi);
@@ -87,6 +92,10 @@ apiRoute.put(
 apiRoute.delete(
   "/api/albums-api/:albumId",
   AlbumsController.destroyByAlbumIdFromApi
+);
+apiRoute.patch(
+  "/api/albums-api/:albumId",
+  AlbumsController.patchByAlbumIdFromApi
 );
 
 apiRoute.get("/api/photos-api", PhotosController.getAllFromApi);
@@ -100,6 +109,10 @@ apiRoute.delete(
   "/api/photos-api/:photoId",
   PhotosController.destroyByPhotoIdFromApi
 );
+apiRoute.patch(
+  "/api/photos-api/:photoId",
+  PhotosController.patchByPhotoIdFromApi
+);
 
 apiRoute.get("/api/todos-api", TodosController.getAllFromApi);
 apiRoute.post("/api/todos-api", TodosController.storeFromApi);
@@ -109,5 +122,6 @@ apiRoute.delete(
   "/api/todos-api/:todoId",
   TodosController.destroyByTodosIdFromApi
 );
+apiRoute.patch("/api/todos-api/:todoId", TodosController.patchByTodoIdFromApi);
 //END API
 export { apiRoute };

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { PostsService } from "../service/posts-service";
-import { PostQuery, PostRequest } from "../model/posts-model";
+import { PostQuery, PostRequest, PostResponse } from "../model/posts-model";
+import { AxiosResponse } from "axios";
 
 export class PostsController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -17,7 +18,7 @@ export class PostsController {
   static async store(req: Request, res: Response, next: NextFunction) {
     try {
       const request: PostRequest = req.body as PostRequest;
-      const result = await PostsService.store(request);
+      const result: PostResponse = await PostsService.store(request);
 
       return res.status(200).json({
         data: result,
@@ -30,7 +31,7 @@ export class PostsController {
   static async findByPostId(req: Request, res: Response, next: NextFunction) {
     try {
       const postId: number = parseInt(req.params.postId);
-      const result = await PostsService.findByPostId(postId);
+      const result: PostResponse = await PostsService.findByPostId(postId);
 
       return res.status(200).json({
         data: result,
@@ -44,7 +45,10 @@ export class PostsController {
     try {
       const postId: number = parseInt(req.params.postId);
       const request: PostRequest = req.body as PostRequest;
-      const result = await PostsService.updatePostsByPostId(postId, request);
+      const result: PostResponse = await PostsService.updatePostsByPostId(
+        postId,
+        request
+      );
 
       return res.status(200).json({
         data: result,
@@ -61,7 +65,7 @@ export class PostsController {
   ) {
     try {
       const postId: number = parseInt(req.params.postId);
-      const result = await PostsService.destroyByPostId(postId);
+      const result: PostResponse = await PostsService.destroyByPostId(postId);
 
       return res.status(200).json({
         data: result,
@@ -71,15 +75,14 @@ export class PostsController {
     }
   }
 
-  static async changeUserIdByPostId(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  static async patchByPostId(req: Request, res: Response, next: NextFunction) {
     try {
       const postId: number = parseInt(req.params.postId);
       const request: PostRequest = req.body as PostRequest;
-      const result = await PostsService.changeUserIdByPostId(postId, request);
+      const result: PostResponse = await PostsService.patchByPostId(
+        postId,
+        request
+      );
 
       return res.status(200).json({
         data: result,
@@ -92,7 +95,7 @@ export class PostsController {
   static async getAllFromApi(req: Request, res: Response, next: NextFunction) {
     try {
       const query: PostQuery = req.query as PostQuery;
-      const result = await PostsService.getAllFromApi(query);
+      const result: AxiosResponse = await PostsService.getAllFromApi(query);
       return res.status(200).json({
         data: result,
       });
@@ -108,7 +111,9 @@ export class PostsController {
   ) {
     try {
       const postId: number = parseInt(req.params.postId);
-      const result = await PostsService.findByPostIdFromApi(postId);
+      const result: AxiosResponse = await PostsService.findByPostIdFromApi(
+        postId
+      );
 
       return res.status(200).json({
         data: result,
@@ -126,7 +131,10 @@ export class PostsController {
     try {
       const postId: number = parseInt(req.params.postId);
       const request: PostRequest = req.body as PostRequest;
-      const result = await PostsService.updateByPostIdFromApi(postId, request);
+      const result: AxiosResponse = await PostsService.updateByPostIdFromApi(
+        postId,
+        request
+      );
 
       return res.status(200).json({
         data: result,
@@ -143,7 +151,30 @@ export class PostsController {
   ) {
     try {
       const postId: number = parseInt(req.params.postId);
-      const result = await PostsService.destroyByPostIdFromApi(postId);
+      const result: AxiosResponse = await PostsService.destroyByPostIdFromApi(
+        postId
+      );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async patchByPostIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const postId: number = parseInt(req.params.postId);
+      const request: PostRequest = req.body as PostRequest;
+      const result: AxiosResponse = await PostsService.patchByPostIdFromApi(
+        postId,
+        request
+      );
 
       return res.status(200).json({
         data: result,

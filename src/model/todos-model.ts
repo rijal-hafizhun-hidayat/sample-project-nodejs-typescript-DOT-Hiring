@@ -7,7 +7,7 @@ export type TodosRequest = {
 };
 
 export type TodosQuery = {
-  userId?: number
+  userId?: string
 }
 
 export type TodosResponse = {

@@ -116,6 +116,25 @@ export class AlbumsService {
     return toAlbumsResponse(album);
   }
 
+  static async patchByAlbumId(
+    albumId: number,
+    request: AlbumsRequest
+  ): Promise<AlbumsResponse> {
+    const [album] = await prisma.$transaction([
+      prisma.album.update({
+        where: {
+          id: albumId,
+        },
+        data: {
+          userId: request.userId,
+          title: request.title,
+        },
+      }),
+    ]);
+
+    return toAlbumsResponse(album);
+  }
+
   static async getAllFromApi(query: AlbumsQuery): Promise<AxiosResponse> {
     const queryParams: any = {};
 
@@ -131,7 +150,7 @@ export class AlbumsService {
     return albums.data;
   }
 
-  static async storeFromApi(request: AlbumsRequest): Promise<AlbumsResponse> {
+  static async storeFromApi(request: AlbumsRequest): Promise<AxiosResponse> {
     const requestBody: AlbumsRequest = Validation.validate(
       AlbumsValidation.AlbumRequest,
       request
@@ -145,21 +164,21 @@ export class AlbumsService {
       }
     );
 
-    return toAlbumsResponse(album.data);
+    return album.data;
   }
 
-  static async findByAlbumIdFromApi(albumId: number): Promise<AlbumsResponse> {
+  static async findByAlbumIdFromApi(albumId: number): Promise<AxiosResponse> {
     const album: AxiosResponse = await axios.get(
       `https://jsonplaceholder.typicode.com/albums/${albumId}`
     );
 
-    return toAlbumsResponse(album.data);
+    return album.data;
   }
 
   static async updateByAlbumIdFromApi(
     albumId: number,
     request: AlbumsRequest
-  ): Promise<AlbumsResponse> {
+  ): Promise<AxiosResponse> {
     const requestBody: AlbumsRequest = Validation.validate(
       AlbumsValidation.AlbumRequest,
       request
@@ -173,7 +192,7 @@ export class AlbumsService {
       }
     );
 
-    return toAlbumsResponse(album.data);
+    return album.data;
   }
 
   static async destroyByAlbumIdFromApi(
@@ -181,6 +200,21 @@ export class AlbumsService {
   ): Promise<AxiosResponse> {
     const album: AxiosResponse = await axios.delete(
       `https://jsonplaceholder.typicode.com/albums/${albumId}`
+    );
+
+    return album.data;
+  }
+
+  static async patchByAlbumIdFromApi(
+    albumId: number,
+    request: AlbumsRequest
+  ): Promise<AxiosResponse> {
+    const album: AxiosResponse = await axios.patch(
+      `https://jsonplaceholder.typicode.com/albums/${albumId}`,
+      {
+        userId: request.userId,
+        title: request.title,
+      }
     );
 
     return album.data;

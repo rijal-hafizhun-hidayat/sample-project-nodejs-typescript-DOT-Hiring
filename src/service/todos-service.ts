@@ -11,8 +11,14 @@ import { TodosValidation } from "../validation/todos-validation";
 import { Validation } from "../validation/validation";
 
 export class TodosService {
-  static async getAll(): Promise<any> {
-    const todos = await prisma.todo.findMany({});
+  static async getAll(query: TodosQuery): Promise<any> {
+    const queryParams: any = {};
+
+    if (query.userId) {
+      queryParams.where = {};
+      queryParams.where.userId = parseInt(query.userId);
+    }
+    const todos = await prisma.todo.findMany(queryParams);
 
     return todos;
   }
@@ -133,7 +139,7 @@ export class TodosService {
     return todos.data;
   }
 
-  static async storeFromApi(request: TodosRequest): Promise<TodosResponse> {
+  static async storeFromApi(request: TodosRequest): Promise<AxiosResponse> {
     const requestBody: TodosRequest = Validation.validate(
       TodosValidation.TodosRequest,
       request
@@ -148,21 +154,21 @@ export class TodosService {
       }
     );
 
-    return toTodosResponse(todo.data);
+    return todo.data;
   }
 
-  static async findByTodosIdFromApi(todoId: number): Promise<TodosResponse> {
+  static async findByTodosIdFromApi(todoId: number): Promise<AxiosResponse> {
     const todo: AxiosResponse = await axios.get(
       `https://jsonplaceholder.typicode.com/todos/${todoId}`
     );
 
-    return toTodosResponse(todo.data);
+    return todo.data;
   }
 
   static async updateByTodosIdFromApi(
     todoId: number,
     request: TodosRequest
-  ): Promise<TodosResponse> {
+  ): Promise<AxiosResponse> {
     const requestBody: TodosRequest = Validation.validate(
       TodosValidation.TodosRequest,
       request
@@ -177,7 +183,7 @@ export class TodosService {
       }
     );
 
-    return toTodosResponse(todo.data);
+    return todo.data;
   }
 
   static async destroyByTodosIdFromApi(todoId: number): Promise<AxiosResponse> {
@@ -186,5 +192,51 @@ export class TodosService {
     );
 
     return todo.data;
+  }
+
+  static async patchByTodosIdFromApi(
+    todoId: number,
+    request: TodosRequest
+  ): Promise<AxiosResponse> {
+    const todo = await axios.patch(
+      `https://jsonplaceholder.typicode.com/todos/${todoId}`,
+      {
+        userId: request.userId,
+        title: request.title,
+        completed: request.completed,
+      }
+    );
+
+    return todo.data;
+  }
+
+  static async patchByTodosId(
+    todoId: number,
+    request: TodosRequest
+  ): Promise<TodosResponse> {
+    const isTodoExists = await prisma.todo.findUnique({
+      where: {
+        id: todoId,
+      },
+    });
+
+    if (!isTodoExists) {
+      throw new ErrorResponse(404, "todo not found");
+    }
+
+    const [todo] = await prisma.$transaction([
+      prisma.todo.update({
+        where: {
+          id: todoId,
+        },
+        data: {
+          userId: request.userId,
+          title: request.title,
+          completed: request.completed,
+        },
+      }),
+    ]);
+
+    return toTodosResponse(todo);
   }
 }
