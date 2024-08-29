@@ -1,7 +1,7 @@
 import { photo } from "@prisma/client";
 
 export type PhotosQuery = {
-  albumId: string;
+  albumId?: string;
 };
 
 export type PhotosRequest = {

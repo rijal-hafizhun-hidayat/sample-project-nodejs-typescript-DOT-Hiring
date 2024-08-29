@@ -88,5 +88,17 @@ apiRoute.delete(
   "/api/albums-api/:albumId",
   AlbumsController.destroyByAlbumIdFromApi
 );
+
+apiRoute.get("/api/photos-api", PhotosController.getAllFromApi);
+apiRoute.post("/api/photos-api", PhotosController.storeFromApi);
+apiRoute.get("/api/photos-api/:photoId", PhotosController.findByPhotoIdFromApi);
+apiRoute.put(
+  "/api/photos-api/:photoId",
+  PhotosController.updateByPhotoIdFromApi
+);
+apiRoute.delete(
+  "/api/photos-api/:photoId",
+  PhotosController.destroyByPhotoIdFromApi
+);
 //END API
 export { apiRoute };
