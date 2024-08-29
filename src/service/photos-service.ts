@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from "axios";
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
 import {
@@ -104,6 +105,27 @@ export class PhotosService {
     return toPhotosResponse(photo);
   }
 
+  static async patchByPhotoId(
+    photoId: number,
+    request: PhotosRequest
+  ): Promise<PhotosResponse> {
+    const [photo] = await prisma.$transaction([
+      prisma.photo.update({
+        where: {
+          id: photoId,
+        },
+        data: {
+          albumId: request.albumId,
+          title: request.title,
+          url: request.url,
+          thumbnailUrl: request.thumbnailUrl,
+        },
+      }),
+    ]);
+
+    return toPhotosResponse(photo);
+  }
+
   static async destroyByPhotoId(photoId: number): Promise<PhotosResponse> {
     const isPhotoExists = await prisma.photo.findUnique({
       where: {
@@ -124,5 +146,97 @@ export class PhotosService {
     ]);
 
     return toPhotosResponse(photo);
+  }
+
+  static async getAllFromApi(query: PhotosQuery): Promise<AxiosResponse> {
+    const queryParams: any = {};
+
+    if (query.albumId) {
+      queryParams.params = {};
+      queryParams.params.albumId = parseInt(query.albumId);
+    }
+
+    const photos: AxiosResponse = await axios.get(
+      "https://jsonplaceholder.typicode.com/photos",
+      queryParams
+    );
+
+    return photos.data;
+  }
+
+  static async storeFromApi(request: PhotosRequest): Promise<AxiosResponse> {
+    const requestBody: PhotosRequest = Validation.validate(
+      PhotosValidation.PhotosRequest,
+      request
+    );
+
+    const photo: AxiosResponse = await axios.post(
+      "https://jsonplaceholder.typicode.com/photos",
+      {
+        albumId: requestBody.albumId,
+        title: requestBody.title,
+        url: requestBody.url,
+        thumbnailUrl: requestBody.thumbnailUrl,
+      }
+    );
+
+    return photo.data;
+  }
+
+  static async findByPhotoIdFromApi(photoId: number): Promise<AxiosResponse> {
+    const photos: AxiosResponse = await axios.get(
+      `https://jsonplaceholder.typicode.com/photos/${photoId}`
+    );
+
+    return photos.data;
+  }
+
+  static async updateByPhotoIdFromApi(
+    photoId: number,
+    request: PhotosRequest
+  ): Promise<AxiosResponse> {
+    const requestBody: PhotosRequest = Validation.validate(
+      PhotosValidation.PhotosRequest,
+      request
+    );
+
+    const photo: AxiosResponse = await axios.put(
+      `https://jsonplaceholder.typicode.com/photos/${photoId}`,
+      {
+        albumId: requestBody.albumId,
+        title: requestBody.title,
+        url: requestBody.url,
+        thumbnailUrl: requestBody.thumbnailUrl,
+      }
+    );
+
+    return photo.data;
+  }
+
+  static async destroyByPhotoIdFromApi(
+    photoId: number
+  ): Promise<AxiosResponse> {
+    const photo: AxiosResponse = await axios.delete(
+      `https://jsonplaceholder.typicode.com/photos/${photoId}`
+    );
+
+    return photo.data;
+  }
+
+  static async patchByPhotoIdFromApi(
+    photoId: number,
+    request: PhotosRequest
+  ): Promise<AxiosResponse> {
+    const photo: AxiosResponse = await axios.patch(
+      `https://jsonplaceholder.typicode.com/photos/${photoId}`,
+      {
+        albumId: request.albumId,
+        title: request.title,
+        url: request.url,
+        thumbnailUrl: request.thumbnailUrl,
+      }
+    );
+
+    return photo.data;
   }
 }

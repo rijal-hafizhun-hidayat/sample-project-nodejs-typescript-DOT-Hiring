@@ -6,6 +6,10 @@ export type PostRequest = {
   body?: string;
 };
 
+export type PostQuery = {
+  userId?: string;
+};
+
 export type PostResponse = {
   id: number;
   userId: number;

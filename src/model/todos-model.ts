@@ -6,6 +6,10 @@ export type TodosRequest = {
   completed: boolean;
 };
 
+export type TodosQuery = {
+  userId?: string
+}
+
 export type TodosResponse = {
   id: number;
   userId: number;
