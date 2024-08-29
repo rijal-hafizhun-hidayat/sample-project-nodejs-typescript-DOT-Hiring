@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { PostsService } from "../service/posts-service";
-import { PostRequest } from "../model/posts-model";
+import { PostQuery, PostRequest } from "../model/posts-model";
 
 export class PostsController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -80,6 +80,70 @@ export class PostsController {
       const postId: number = parseInt(req.params.postId);
       const request: PostRequest = req.body as PostRequest;
       const result = await PostsService.changeUserIdByPostId(postId, request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllFromApi(req: Request, res: Response, next: NextFunction) {
+    try {
+      const query: PostQuery = req.query as PostQuery;
+      const result = await PostsService.getAllFromApi(query);
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async findByPostIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const postId: number = parseInt(req.params.postId);
+      const result = await PostsService.findByPostIdFromApi(postId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateByPostIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const postId: number = parseInt(req.params.postId);
+      const request: PostRequest = req.body as PostRequest;
+      const result = await PostsService.updateByPostIdFromApi(postId, request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async destroyByPostIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const postId: number = parseInt(req.params.postId);
+      const result = await PostsService.destroyByPostIdFromApi(postId);
 
       return res.status(200).json({
         data: result,

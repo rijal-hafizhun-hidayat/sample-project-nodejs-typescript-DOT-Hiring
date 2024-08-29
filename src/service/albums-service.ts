@@ -55,14 +55,14 @@ export class AlbumsService {
     }
 
     const [album] = await prisma.$transaction([
-        prisma.album.delete({
-          where: {
-            id: albumId,
-          },
-        }),
-      ]);
-  
-      return toAlbumsResponse(album);
+      prisma.album.delete({
+        where: {
+          id: albumId,
+        },
+      }),
+    ]);
+
+    return toAlbumsResponse(album);
   }
 
   static async findByAlbumId(albumId: number): Promise<AlbumsResponse> {
