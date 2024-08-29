@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AlbumsService } from "../service/albums-service";
-import { AlbumsRequest } from "../model/album-model";
+import { AlbumsQuery, AlbumsRequest } from "../model/album-model";
 
 export class AlbumsController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -66,6 +66,86 @@ export class AlbumsController {
       const albumId: number = parseInt(req.params.albumId);
       const request: AlbumsRequest = req.body as AlbumsRequest;
       const result = await AlbumsService.updateByAlbumId(albumId, request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllFromApi(req: Request, res: Response, next: NextFunction) {
+    try {
+      const query: AlbumsQuery = req.query as AlbumsQuery;
+      const result = await AlbumsService.getAllFromApi(query);
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async storeFromApi(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request: AlbumsRequest = req.body as AlbumsRequest;
+      const result = await AlbumsService.storeFromApi(request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async findByAlbumIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const albumId: number = parseInt(req.params.albumId);
+      const result = await AlbumsService.findByAlbumIdFromApi(albumId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateByAlbumIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const albumId: number = parseInt(req.params.albumId);
+      const request: AlbumsRequest = req.body as AlbumsRequest;
+      const result = await AlbumsService.updateByAlbumIdFromApi(
+        albumId,
+        request
+      );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async destroyByAlbumIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const albumId: number = parseInt(req.params.albumId);
+      const result = await AlbumsService.destroyByAlbumIdFromApi(albumId);
 
       return res.status(200).json({
         data: result,

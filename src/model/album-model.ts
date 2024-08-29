@@ -5,6 +5,10 @@ export type AlbumsRequest = {
   title: string;
 };
 
+export type AlbumsQuery = {
+  userId?: number;
+};
+
 export type AlbumsResponse = {
   id: number;
   userId: number;
