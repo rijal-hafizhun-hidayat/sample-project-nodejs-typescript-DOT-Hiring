@@ -1,6 +1,7 @@
 import axios from "axios";
 import { any } from "zod";
 import { prisma } from "../app/database";
+import { create } from "domain";
 
 export class UsersService {
   static async getAll(): Promise<any> {
@@ -22,6 +23,27 @@ export class UsersService {
             email: value.email,
             phone: value.phone,
             website: value.website,
+            address: {
+              create: {
+                street: value.address.street,
+                city: value.address.city,
+                suite: value.address.suite,
+                zipcode: value.address.zipcode,
+                geo: {
+                  create: {
+                    lat: value.address.geo.lat,
+                    lng: value.address.geo.lng,
+                  },
+                },
+              },
+            },
+            company: {
+              create: {
+                name: value.company.name,
+                catchPhrase: value.company.catchPhrase,
+                bs: value.company.bs,
+              },
+            },
           },
         }),
       ]);
