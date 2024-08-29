@@ -1,7 +1,7 @@
-### sample app nodejs + typescript for DOT hiring in position back-end developer
+### sample app nodejs + typescript
 
 ## About
-sample app nodejs + typescript
+this is sample app jsonplaceholder nodejs + typescript cloning for hiring position back-end developer, please checkout the original [jsonplaceholder](https://jsonplaceholder.typicode.com/)
 
 ## Run
 - Run `npm run serve` to run the application at `http://localhost:3000`
