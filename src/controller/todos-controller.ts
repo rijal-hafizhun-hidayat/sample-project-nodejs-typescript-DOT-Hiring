@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { TodosService } from "../service/todos-service";
-import { TodosRequest } from "../model/todos-model";
+import { TodosQuery, TodosRequest } from "../model/todos-model";
 import { number } from "zod";
 
 export class TodosController {
@@ -63,6 +63,84 @@ export class TodosController {
     try {
       const todoId: number = parseInt(req.params.todoId);
       const result = await TodosService.destroyByTodoId(todoId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllFromApi(req: Request, res: Response, next: NextFunction) {
+    try {
+      const query: TodosQuery = req.query as TodosQuery;
+      const result = await TodosService.getAllFromApi(query);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async storeFromApi(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request: TodosRequest = req.body as TodosRequest;
+      const result = await TodosService.storeFromApi(request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async findByTodosIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const todoId: number = parseInt(req.params.todoId);
+      const result = await TodosService.findByTodosIdFromApi(todoId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateByTodosIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const todoId: number = parseInt(req.params.todoId);
+      const request: TodosRequest = req.body as TodosRequest;
+      const result = await TodosService.updateByTodosIdFromApi(todoId, request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async destroyByTodosIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const todoId: number = parseInt(req.params.todoId);
+      const result = await TodosService.destroyByTodosIdFromApi(todoId);
 
       return res.status(200).json({
         data: result,

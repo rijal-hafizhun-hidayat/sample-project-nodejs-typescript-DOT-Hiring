@@ -1,6 +1,8 @@
+import axios, { AxiosResponse } from "axios";
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
 import {
+  TodosQuery,
   TodosRequest,
   TodosResponse,
   toTodosResponse,
@@ -113,5 +115,76 @@ export class TodosService {
     ]);
 
     return toTodosResponse(todo);
+  }
+
+  static async getAllFromApi(query: TodosQuery): Promise<AxiosResponse> {
+    const queryParams: any = {};
+
+    if (query.userId) {
+      queryParams.params = {};
+      queryParams.params.userId = query.userId;
+    }
+
+    const todos: AxiosResponse = await axios.get(
+      "https://jsonplaceholder.typicode.com/todos",
+      queryParams
+    );
+
+    return todos.data;
+  }
+
+  static async storeFromApi(request: TodosRequest): Promise<TodosResponse> {
+    const requestBody: TodosRequest = Validation.validate(
+      TodosValidation.TodosRequest,
+      request
+    );
+
+    const todo: AxiosResponse = await axios.post(
+      "https://jsonplaceholder.typicode.com/todos",
+      {
+        userId: requestBody.userId,
+        title: requestBody.title,
+        completed: requestBody.completed,
+      }
+    );
+
+    return toTodosResponse(todo.data);
+  }
+
+  static async findByTodosIdFromApi(todoId: number): Promise<TodosResponse> {
+    const todo: AxiosResponse = await axios.get(
+      `https://jsonplaceholder.typicode.com/todos/${todoId}`
+    );
+
+    return toTodosResponse(todo.data);
+  }
+
+  static async updateByTodosIdFromApi(
+    todoId: number,
+    request: TodosRequest
+  ): Promise<TodosResponse> {
+    const requestBody: TodosRequest = Validation.validate(
+      TodosValidation.TodosRequest,
+      request
+    );
+
+    const todo: AxiosResponse = await axios.put(
+      `https://jsonplaceholder.typicode.com/todos/${todoId}`,
+      {
+        userId: requestBody.userId,
+        title: requestBody.title,
+        completed: requestBody.completed,
+      }
+    );
+
+    return toTodosResponse(todo.data);
+  }
+
+  static async destroyByTodosIdFromApi(todoId: number): Promise<AxiosResponse> {
+    const todo: AxiosResponse = await axios.delete(
+      `https://jsonplaceholder.typicode.com/todos/${todoId}`
+    );
+
+    return todo.data;
   }
 }

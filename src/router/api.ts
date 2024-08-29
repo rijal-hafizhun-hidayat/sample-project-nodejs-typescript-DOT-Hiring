@@ -100,5 +100,14 @@ apiRoute.delete(
   "/api/photos-api/:photoId",
   PhotosController.destroyByPhotoIdFromApi
 );
+
+apiRoute.get("/api/todos-api", TodosController.getAllFromApi);
+apiRoute.post("/api/todos-api", TodosController.storeFromApi);
+apiRoute.get("/api/todos-api/:todoId", TodosController.findByTodosIdFromApi);
+apiRoute.put("/api/todos-api/:todoId", TodosController.updateByTodosIdFromApi);
+apiRoute.delete(
+  "/api/todos-api/:todoId",
+  TodosController.destroyByTodosIdFromApi
+);
 //END API
 export { apiRoute };
