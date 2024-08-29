@@ -38,7 +38,7 @@ model address {
   zipcode String @db.VarChar(255)
   userId  Int    @unique
 
-  user users @relation(fields: [userId], references: [id])
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   geo  geo?
 
   @@map("address")
@@ -50,7 +50,7 @@ model geo {
   lng       String @db.VarChar(255)
   addressId Int    @unique
 
-  address address @relation(fields: [addressId], references: [id])
+  address address @relation(fields: [addressId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model company {
@@ -60,7 +60,7 @@ model company {
   bs          String @db.VarChar(255)
   userId      Int    @unique
 
-  user users @relation(fields: [userId], references: [id])
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model post {
