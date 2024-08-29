@@ -1,6 +1,8 @@
+import axios, { Axios, AxiosResponse } from "axios";
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
 import {
+  CommentQuery,
   CommentResponse,
   CommentsRequest,
   toCommentResponse,
@@ -148,5 +150,83 @@ export class CommentsService {
     ]);
 
     return toCommentResponse(comment);
+  }
+
+  static async getAllFromApi(query: CommentQuery): Promise<AxiosResponse> {
+    const queryParams: any = {};
+
+    if (query.postId) {
+      queryParams.params = {};
+      queryParams.params.postId = query.postId;
+    }
+    const comments: AxiosResponse = await axios.get(
+      "https://jsonplaceholder.typicode.com/comments",
+      queryParams
+    );
+
+    return comments.data;
+  }
+
+  static async storeFromApi(
+    request: CommentsRequest
+  ): Promise<CommentResponse> {
+    const requestBody: CommentsRequest = Validation.validate(
+      CommentsValidation.CommentsRequest,
+      request
+    );
+
+    const comments: AxiosResponse = await axios.post(
+      "https://jsonplaceholder.typicode.com/comments",
+      {
+        postId: requestBody.postId,
+        name: requestBody.name,
+        email: requestBody.email,
+        body: requestBody.body,
+      }
+    );
+
+    return toCommentResponse(comments.data);
+  }
+
+  static async findByCommentIdFromApi(
+    commentId: number
+  ): Promise<CommentResponse> {
+    const comment: AxiosResponse = await axios.get(
+      `https://jsonplaceholder.typicode.com/comments/${commentId}`
+    );
+
+    return toCommentResponse(comment.data);
+  }
+
+  static async updateByCommentIdFromApi(
+    commentId: number,
+    request: CommentsRequest
+  ): Promise<CommentResponse> {
+    const requestBody: CommentsRequest = Validation.validate(
+      CommentsValidation.CommentsRequest,
+      request
+    );
+
+    const comment: AxiosResponse = await axios.put(
+      `https://jsonplaceholder.typicode.com/comments/${commentId}`,
+      {
+        postId: requestBody.postId,
+        name: requestBody.name,
+        email: requestBody.email,
+        body: requestBody.body,
+      }
+    );
+
+    return toCommentResponse(comment.data);
+  }
+
+  static async destroyByCommentIdFromApi(
+    commentId: number
+  ): Promise<AxiosResponse> {
+    const comment: AxiosResponse = await axios.delete(
+      `https://jsonplaceholder.typicode.com/comments/${commentId}`
+    );
+
+    return comment.data;
   }
 }
