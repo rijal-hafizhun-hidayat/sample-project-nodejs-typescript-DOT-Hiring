@@ -7,6 +7,10 @@ export type CommentsRequest = {
   body?: string;
 };
 
+export type CommentQuery = {
+  postId?: number;
+};
+
 export type CommentResponse = {
   id: number;
   postId: number;

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CommentsService } from "../service/comments-service";
-import { CommentsRequest } from "../model/comments-model";
+import { CommentQuery, CommentsRequest } from "../model/comments-model";
 
 export class CommentsController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -94,6 +94,87 @@ export class CommentsController {
         commentId,
         request
       );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllFromApi(req: Request, res: Response, next: NextFunction) {
+    try {
+      const query: CommentQuery = req.query as CommentQuery;
+      const result = await CommentsService.getAllFromApi(query);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async storeFromApi(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request: CommentsRequest = req.body as CommentsRequest;
+      const result = await CommentsService.storeFromApi(request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async findByCommentIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const commentId: number = parseInt(req.params.commentId);
+      const result = await CommentsService.findByCommentIdFromApi(commentId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateByCommentIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const commentId: number = parseInt(req.params.commentId);
+      const request: CommentsRequest = req.body as CommentsRequest;
+      const result = await CommentsService.updateByCommentIdFromApi(
+        commentId,
+        request
+      );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async destroyByCommentIdFromApi(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const commentId: number = parseInt(req.params.commentId);
+      const result = await CommentsService.destroyByCommentIdFromApi(commentId);
 
       return res.status(200).json({
         data: result,

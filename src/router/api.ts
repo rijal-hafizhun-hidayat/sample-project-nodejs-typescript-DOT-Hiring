@@ -61,5 +61,21 @@ apiRoute.delete(
   "/api/posts-api/:postId",
   PostsController.destroyByPostIdFromApi
 );
+
+apiRoute.get("/api/comments-api", CommentsController.getAllFromApi);
+apiRoute.post("/api/comments-api", CommentsController.storeFromApi);
+apiRoute.get(
+  "/api/comments-api/:commentId",
+  CommentsController.findByCommentIdFromApi
+);
+apiRoute.put(
+  "/api/comments-api/:commentId",
+  CommentsController.updateByCommentIdFromApi
+);
+apiRoute.delete(
+  "/api/comments-api/:commentId",
+  CommentsController.destroyByCommentIdFromApi
+);
+
 //END API
 export { apiRoute };
