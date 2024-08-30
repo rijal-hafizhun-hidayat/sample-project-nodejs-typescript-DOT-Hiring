@@ -5,10 +5,14 @@ import { CommentsController } from "../controller/comments-controller";
 import { AlbumsController } from "../controller/albums-controller";
 import { TodosController } from "../controller/todos-controller";
 import { PhotosController } from "../controller/photos-controller";
+import { MigrationController } from "../controller/migration-controller";
 
 const apiRoute = express.Router();
 
 //START ORM
+
+apiRoute.post("/api/migration-users", MigrationController.migrationUsers);
+apiRoute.post("/api/migration-posts", MigrationController.migrationPosts);
 
 apiRoute.get("/api/users", UsersController.getAll);
 apiRoute.post("/api/users-api", UsersController.storeFromApi);
