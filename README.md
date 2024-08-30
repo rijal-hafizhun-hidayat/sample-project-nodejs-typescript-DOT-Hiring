@@ -2,7 +2,7 @@
 
 ## About
 
-this is sample app `jsonplaceholder` using nodejs + typescript cloning for hiring position back-end developer, please checkout the original [jsonplaceholder](https://jsonplaceholder.typicode.com/)
+this is sample app cloning from `jsonplaceholder` using nodejs + typescript to hiring position back-end developer, please checkout the original [jsonplaceholder](https://jsonplaceholder.typicode.com/)
 
 ## Set up
 
