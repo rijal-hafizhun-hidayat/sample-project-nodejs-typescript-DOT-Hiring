@@ -24,5 +24,28 @@ DATABASE_URL="postgresql://postgres:password@localhost:5432/typscript-app"
 - Run `npm run serve` to run the application at `http://localhost:3000`
 
 ## Migrate fake data
+note:
+<em>
+you must run migration data users first because data posts has relation many to one users
+</em>
 
-- Run route `/api/users-api` to migrate fake data users
+- Run route `/api/migration-users` to migrate fake data users
+- Run route `/api/migration-posts` to migrate fake data posts
+
+## resource
+
+#### ORM
+
+- /api/comments
+- /api/posts
+- /api/albums
+- /api/todos
+- /api/photos
+
+#### AXIOS 
+
+- /api/comments-api
+- /api/posts-api
+- /api/albums-api
+- /api/todos-api
+- /api/photos-api
